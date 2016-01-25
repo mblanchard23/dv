@@ -143,10 +143,10 @@ def table_inits(db):
 		print 'Transactions table already exists'		
 
 	
-def dropper(db):
-	lst = ["impressions","transactions"]
-	for table in lst:
-		try:
-			 db.query("drop table %s" % (table))
-		except _mysql.OperationalError:
-			print 'Unable to drop %s' % (table)
+#def dropper(db):
+#	lst = ["impressions","transactions"]
+#	for table in lst:
+#		try:
+#			 db.query("drop table %s" % (table))
+#		except _mysql.OperationalError:
+#			print 'Unable to drop %s' % (table)
