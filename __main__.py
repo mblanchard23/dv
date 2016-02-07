@@ -10,7 +10,7 @@ def gen_loop_imp():
 		sleep_time = random.random()
 		#print "Sleeping for %d" % (sleep_time)
 		time.sleep(sleep_time) 
-		print str(gen_impression(db)) + ' -- Impression'
+		print str(gen_impression()) + ' -- Impression'
 
 
 def gen_loop_trans():
@@ -19,7 +19,7 @@ def gen_loop_trans():
 		sleep_time = random.randint(1,5)
 		#print "Sleeping for %d" % (sleep_time)
 		time.sleep(sleep_time)
-		print str(gen_transaction(db)) + ' -- Transaction'
+		print str(gen_transaction()) + ' -- Transaction'
 
 
 # def query_db(db,q):

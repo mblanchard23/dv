@@ -87,6 +87,15 @@ def random_num(mu,sigma,max_range,min_range):
 city_lst = [x for x in city_dict]
 product_lst = [x for x in product_dict]
 
+import _mysql
+
+class db_connection():
+	def __init__(self):
+		self.db = _mysql.connect(host='localhost',user='logger',db='webdata')
+
+	def refresh(self):
+		self.db = _mysql.connect(host='localhost',user='logger',db='webdata')
+
 def rand_city(city_lst):
 	return city_lst[random_num(30,10,48,0)]
 
@@ -97,34 +106,41 @@ def rand_device(device_lst):
 	return device_lst[random.randint(0,2)]
 
 
-def gen_impression(db):
+def gen_impression():
+	a = db_connection()
 	impression = (str(datetime.datetime.now())
 						,rand_product(product_lst)
 						,rand_city(city_lst)
 						,rand_device(device_lst))
 	try:
-		db.query(insert_impression % impression)
+		a.db.query(insert_impression % impression)
 	except _mysql.OperationalError:
 		print 'MySQL Server connection dropped - didn''t insert row'
+		a.refresh()
 	
 
 	return impression
 
-def gen_transaction(db):
+def gen_transaction():
+	a = db_connection()
 	transaction = (str(datetime.datetime.now())
 						,rand_product(product_lst)
 						,rand_city(city_lst)
 						,rand_device(device_lst))
 	try:
-		db.query(insert_transaction % transaction)
+		a.db.query(insert_transaction % transaction)
 	except _mysql.OperationalError:
 		print 'MySQL Server connection dropped - didn''t insert row'
+		a.refresh()
+
 
 	return transaction
 
 
-import _mysql
-db = _mysql.connect(host='localhost',user='logger',db='webdata')
+
+
+
+
 def table_inits(db):
 	impressions_table_query = """CREATE table impressions(
 			impression_id int NOT NULL AUTO_INCREMENT PRIMARY KEY
