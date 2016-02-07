@@ -102,7 +102,12 @@ def gen_impression(db):
 						,rand_product(product_lst)
 						,rand_city(city_lst)
 						,rand_device(device_lst))
-	db.query(insert_impression % impression)
+	try:
+		db.query(insert_impression % impression)
+	except _mysql.OperationalError:
+		print 'MySQL Server connection dropped - didn''t insert row'
+	
+
 	return impression
 
 def gen_transaction(db):
@@ -110,8 +115,12 @@ def gen_transaction(db):
 						,rand_product(product_lst)
 						,rand_city(city_lst)
 						,rand_device(device_lst))
-	db.query(insert_transaction % transaction)
-	return impression
+	try:
+		db.query(insert_transaction % transaction)
+	except _mysql.OperationalError:
+		print 'MySQL Server connection dropped - didn''t insert row'
+
+	return transaction
 
 
 import _mysql
@@ -150,3 +159,18 @@ def table_inits(db):
 #			 db.query("drop table %s" % (table))
 #		except _mysql.OperationalError:
 #			print 'Unable to drop %s' % (table)
+
+def row_counters(db):
+	row_dict = {'impressions':0,'transactions':0}
+	db.query('select count(*) from impressions')
+	ans = db.store_result()
+	row_dict['impressions'] = ans.fetch_row()[0][0]
+
+	db.query('select count(*) from transactions')
+	ans = db.store_result()
+	row_dict['transactions'] = ans.fetch_row()[0][0]
+	print """Transactions row count: %s\n Impressions row count: %s""" % (row_dict['transactions'],row_dict['impressions'])
+
+	return None
+
+
