@@ -190,3 +190,22 @@ def row_counters(db):
 	return None
 
 
+transactions_by_minute = 'select left(timestamp,16) as The_Time, count(timestamp) as impressions from impressions group by left(timestamp,16)' 
+impressions_by_minute = 'select left(timestamp,16) as The_Time, count(timestamp) as transactions from transactions group by left(timestamp,16)'  
+
+def gen_lists(db):
+	r = db.store_result()
+	results = r.fetch_row(0)
+	x = []
+	y = []
+	for result in results:
+		x.append(result[0])
+		y.append(result[1])
+
+	return (x,y)
+
+
+def trans():
+	db = db_connection().db
+	db.query(transactions_by_minute)
+	return gen_lists(db)
